@@ -1,39 +1,70 @@
-import React from "react";
+import React, { useState } from 'react';
 
-function App() {
+export default function App() {
+  const [urlProduto, setUrlProduto] = useState('');
+  const [idGoogleAds, setIdGoogleAds] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [resultado, setResultado] = useState('');
+
+  const gerarCampanha = async () => {
+    if (!urlProduto || !idGoogleAds) {
+      alert('⚠️ Preencha todos os campos!');
+      return;
+    }
+    setLoading(true);
+    setResultado('');
+
+    try {
+      const response = await fetch('https://SEU_BACKEND.onrender.com/api/campaign', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          urlProduto,
+          idGoogleAds
+        })
+      });
+
+      const data = await response.json();
+      setResultado(data?.mensagem || JSON.stringify(data));
+    } catch (error) {
+      setResultado('❌ Erro ao gerar campanha.');
+    }
+
+    setLoading(false);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white flex flex-col items-center justify-center p-6">
-      {/* Logo e título */}
-      <header className="flex flex-col items-center mb-8">
-        <img
-          src="/logo-google-ads.png"
-          alt="Logo Google Ads"
-          className="w-16 h-16 mb-4"
-        />
-        <h1 className="text-3xl font-bold text-center">
-          Google Máquina Campanha Ads
-        </h1>
-        <p className="text-gray-600 dark:text-gray-300 mt-2 text-center">
-          Crie campanhas de alto desempenho com IA integrada via OpenRouter
-        </p>
-      </header>
+    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center justify-center p-4">
+      <h1 className="text-2xl font-bold mb-6">Google Máquina Campanha Ads</h1>
 
-      {/* Botão de ação */}
-      <main className="flex flex-col items-center gap-4">
-        <button className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-lg transition">
-          🚀 Gerar Nova Campanha
-        </button>
-        <button className="px-6 py-3 bg-gray-300 hover:bg-gray-400 text-gray-900 rounded-lg shadow-lg transition">
-          🌙 Alternar Tema
-        </button>
-      </main>
+      <input
+        type="text"
+        placeholder="URL do Produto"
+        value={urlProduto}
+        onChange={(e) => setUrlProduto(e.target.value)}
+        className="mb-3 p-2 rounded text-black w-80"
+      />
+      <input
+        type="text"
+        placeholder="ID do Google Ads"
+        value={idGoogleAds}
+        onChange={(e) => setIdGoogleAds(e.target.value)}
+        className="mb-3 p-2 rounded text-black w-80"
+      />
 
-      {/* Rodapé */}
-      <footer className="mt-12 text-sm text-gray-500 dark:text-gray-400 text-center">
-        &copy; {new Date().getFullYear()} Máquina de Campanha IA – Todos os direitos reservados.
-      </footer>
+      <button
+        onClick={gerarCampanha}
+        disabled={loading}
+        className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded disabled:opacity-50"
+      >
+        {loading ? 'Gerando...' : 'Gerar Campanha'}
+      </button>
+
+      {resultado && (
+        <pre className="mt-6 p-4 bg-gray-800 rounded w-full max-w-2xl overflow-auto">
+          {resultado}
+        </pre>
+      )}
     </div>
   );
 }
-
-export default App;
