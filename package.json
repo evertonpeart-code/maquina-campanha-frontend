@@ -1,11 +1,11 @@
 {
   "name": "maquina-campanha-frontend",
   "version": "1.0.0",
-  "description": "Frontend M\u00e1quina de Campanha IA - Google Ads style",
+  "description": "Frontend Máquina de Campanha IA - Google Ads style",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview --port $PORT --host"
   },
   "dependencies": {
     "react": "^18.2.0",
