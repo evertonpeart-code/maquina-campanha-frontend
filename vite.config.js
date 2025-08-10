@@ -1,53 +1,55 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
-// Caminho absoluto para facilitar imports
-const rootDir = path.resolve(__dirname);
+// Função que carrega variáveis de ambiente conforme o modo (dev/prod)
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '');
 
-export default defineConfig({
-  root: rootDir, // mantém a raiz do projeto
-  plugins: [
-    react({
-      jsxRuntime: 'automatic', // Evita precisar importar React em cada arquivo
-      babel: {
-        plugins: [
-          // Exemplo: suporte a decorators, optional chaining, etc.
-        ],
+  return {
+    root: path.resolve(__dirname), // Mantém a raiz do projeto
+    plugins: [
+      react({
+        jsxRuntime: 'automatic', // Não precisa importar React manualmente
+      }),
+    ],
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
+        '@components': path.resolve(__dirname, 'src/components'),
+        '@assets': path.resolve(__dirname, 'src/assets'),
+        '@styles': path.resolve(__dirname, 'src/styles'),
+        '@utils': path.resolve(__dirname, 'src/utils'),
+        '@pages': path.resolve(__dirname, 'src/pages'),
+        '@hooks': path.resolve(__dirname, 'src/hooks'),
+        '@services': path.resolve(__dirname, 'src/services'),
       },
-    }),
-  ],
-  resolve: {
-    alias: {
-      '@': path.resolve(rootDir, 'src'), // Permite importar arquivos com "@/"
-      '@components': path.resolve(rootDir, 'src/components'),
-      '@assets': path.resolve(rootDir, 'src/assets'),
-      '@styles': path.resolve(rootDir, 'src/styles'),
-      '@utils': path.resolve(rootDir, 'src/utils'),
-      '@pages': path.resolve(rootDir, 'src/pages'),
-      '@hooks': path.resolve(rootDir, 'src/hooks'),
-      '@services': path.resolve(rootDir, 'src/services')
     },
-  },
-  server: {
-    port: 5173,
-    strictPort: true, // Impede trocar a porta automaticamente
-    host: true, // Permite acesso na rede local (teste em celular/tablet)
-    open: true, // Abre no navegador automaticamente
-  },
-  build: {
-    outDir: 'dist',
-    sourcemap: true, // Facilita debug no build
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          react: ['react', 'react-dom'],
+    server: {
+      port: 5173,
+      strictPort: true, // Não troca de porta automaticamente
+      host: true, // Acessível pela rede local
+      open: true, // Abre no navegador
+    },
+    build: {
+      outDir: 'dist',
+      sourcemap: true, // Útil para debug
+      minify: 'esbuild', // Mais rápido e eficiente
+      target: 'esnext', // Código mais otimizado
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            react: ['react', 'react-dom'],
+          },
         },
       },
     },
-  },
-  preview: {
-    allowedHosts: ['maquina-campanha-frontend.onrender.com'],
-    port: 4173,
-  },
+    preview: {
+      allowedHosts: ['maquina-campanha-frontend.onrender.com'],
+      port: env.PORT || 4173, // Usa porta do ambiente, se existir
+    },
+    define: {
+      'process.env': env, // Permite usar process.env no frontend
+    },
+  };
 });
