@@ -1,33 +1,51 @@
 import React from 'react'
 
-export default function Preview({campaign, onDuplicate}){
-  if(!campaign){
+export default function Preview({ campaign, onDuplicate }) {
+  if (!campaign) {
     return (
-      <div className="mt-6 p-6 bg-white dark:bg-gray-800 rounded shadow text-center">
-        <p className="text-gray-500 dark:text-gray-400">Preview da campanha aparecerá aqui após geração.</p>
+      <div className="mt-6 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md text-center">
+        <p className="text-gray-500 dark:text-gray-400 italic">Preview da campanha aparecerá aqui após geração.</p>
       </div>
     )
   }
-  return (
-    <div className="mt-6 p-6 bg-white dark:bg-gray-800 rounded shadow">
-      <div className="flex items-start justify-between">
-        <div>
-          <h3 className="font-semibold text-lg">{campaign.title || 'Anúncio Principal'}</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">{campaign.description || 'Descrição do anúncio'}</p>
-        </div>
-        <div className="flex gap-2">
-          <button onClick={()=>onDuplicate && onDuplicate(campaign)} className="px-3 py-1 bg-gray-200 rounded">Duplicar</button>
-        </div>
-      </div>
 
-      <div className="mt-4">
-        <h4 className="text-sm font-medium text-gray-500">Preview (desktop)</h4>
-        <div className="mt-2 border p-3 rounded bg-white dark:bg-gray-900">
-          <div className="text-lg font-semibold">{campaign.headline || campaign.title}</div>
-          <div className="text-sm mt-1">{campaign.description}</div>
-          <a href={campaign.final_url || '#'} className="text-blue-600 mt-2 inline-block">{campaign.final_url}</a>
+  return (
+    <section className="mt-6 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md max-w-4xl mx-auto">
+      <header className="flex justify-between items-start mb-4">
+        <div>
+          <h3 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+            {campaign.title || 'Anúncio Principal'}
+          </h3>
+          <p className="mt-1 text-gray-600 dark:text-gray-300 max-w-prose">{campaign.description || 'Descrição do anúncio'}</p>
         </div>
-      </div>
-    </div>
+        {onDuplicate && (
+          <button
+            onClick={() => onDuplicate(campaign)}
+            className="self-start px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+            title="Duplicar campanha"
+          >
+            Duplicar
+          </button>
+        )}
+      </header>
+
+      <article className="border border-gray-300 dark:border-gray-700 rounded-md p-5 bg-gray-50 dark:bg-gray-900 shadow-sm">
+        <h4 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wide">Preview (desktop)</h4>
+        <div className="text-xl font-semibold text-gray-900 dark:text-gray-100">{campaign.headline || campaign.title}</div>
+        <p className="mt-2 text-gray-700 dark:text-gray-300">{campaign.description}</p>
+        {campaign.final_url ? (
+          <a
+            href={campaign.final_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-3 inline-block text-primary hover:underline break-all"
+          >
+            {campaign.final_url}
+          </a>
+        ) : (
+          <span className="mt-3 inline-block text-gray-400 italic">URL final não disponível</span>
+        )}
+      </article>
+    </section>
   )
 }
