@@ -10,12 +10,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react({
         jsxRuntime: 'automatic',
-        fastRefresh: true, // Hot Reload otimizado
-        babel: {
-          plugins: [
-            ['@babel/plugin-transform-runtime', { regenerator: true }]
-          ]
-        }
+        fastRefresh: true,
       }),
     ],
     resolve: {
@@ -34,19 +29,19 @@ export default defineConfig(({ mode }) => {
       port: 5173,
       strictPort: true,
       host: true,
-      open: false, // Evita abrir aba nova a cada restart
+      open: false,
     },
     build: {
       outDir: 'dist',
-      sourcemap: false, // Desabilitado no prod p/ reduzir tamanho
+      sourcemap: false,
       minify: 'esbuild',
-      target: 'es2017', // Mais compatível e ainda performático
-      cssCodeSplit: true, // Divide CSS por página
+      target: 'es2017',
+      cssCodeSplit: true,
       rollupOptions: {
         output: {
           manualChunks: {
             react: ['react', 'react-dom'],
-            vendor: ['axios']
+            vendor: ['axios'],
           },
         },
       },
@@ -54,8 +49,8 @@ export default defineConfig(({ mode }) => {
     optimizeDeps: {
       include: ['react', 'react-dom', 'axios'],
       esbuildOptions: {
-        target: 'es2017'
-      }
+        target: 'es2017',
+      },
     },
     preview: {
       allowedHosts: ['maquina-campanha-frontend.onrender.com'],
