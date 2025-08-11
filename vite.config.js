@@ -10,8 +10,8 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react({
         jsxRuntime: 'automatic',
-        fastRefresh: true,
-      }),
+        fastRefresh: true
+      })
     ],
     resolve: {
       alias: {
@@ -22,14 +22,14 @@ export default defineConfig(({ mode }) => {
         '@utils': path.resolve(__dirname, 'src/utils'),
         '@pages': path.resolve(__dirname, 'src/pages'),
         '@hooks': path.resolve(__dirname, 'src/hooks'),
-        '@services': path.resolve(__dirname, 'src/services'),
-      },
+        '@services': path.resolve(__dirname, 'src/services')
+      }
     },
     server: {
       port: 5173,
       strictPort: true,
       host: true,
-      open: false,
+      open: false
     },
     build: {
       outDir: 'dist',
@@ -41,23 +41,23 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks: {
             react: ['react', 'react-dom'],
-            vendor: ['axios'],
-          },
-        },
-      },
+            vendor: ['axios']
+          }
+        }
+      }
     },
     optimizeDeps: {
       include: ['react', 'react-dom', 'axios'],
       esbuildOptions: {
-        target: 'es2017',
-      },
+        target: 'es2017'
+      }
     },
     preview: {
       allowedHosts: ['maquina-campanha-frontend.onrender.com'],
-      port: env.PORT || 4173,
+      port: env.PORT || 4173
     },
     define: {
-      'process.env': env,
-    },
+      'process.env': env
+    }
   };
 });
