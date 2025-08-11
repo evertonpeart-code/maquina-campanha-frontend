@@ -23,7 +23,10 @@
     "cssnano": "5.1.15",
     "postcss": "^8.4.21",
     "tailwindcss": "^3.3.3",
-    "vite": "^4.3.9"
+    "vite": "^4.3.9",
+    "@tailwindcss/forms": "^0.5.4",
+    "@tailwindcss/typography": "^0.5.9",
+    "@tailwindcss/aspect-ratio": "^0.5.6"
   },
   "engines": {
     "node": ">=18.0.0"
