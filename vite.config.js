@@ -2,15 +2,20 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
 
-// Função que carrega variáveis de ambiente conforme o modo (dev/prod)
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
 
   return {
-    root: path.resolve(__dirname), // Mantém a raiz do projeto
+    root: path.resolve(__dirname),
     plugins: [
       react({
-        jsxRuntime: 'automatic', // Não precisa importar React manualmente
+        jsxRuntime: 'automatic',
+        fastRefresh: true, // Hot Reload otimizado
+        babel: {
+          plugins: [
+            ['@babel/plugin-transform-runtime', { regenerator: true }]
+          ]
+        }
       }),
     ],
     resolve: {
@@ -27,29 +32,37 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       port: 5173,
-      strictPort: true, // Não troca de porta automaticamente
-      host: true, // Acessível pela rede local
-      open: true, // Abre no navegador
+      strictPort: true,
+      host: true,
+      open: false, // Evita abrir aba nova a cada restart
     },
     build: {
       outDir: 'dist',
-      sourcemap: true, // Útil para debug
-      minify: 'esbuild', // Mais rápido e eficiente
-      target: 'esnext', // Código mais otimizado
+      sourcemap: false, // Desabilitado no prod p/ reduzir tamanho
+      minify: 'esbuild',
+      target: 'es2017', // Mais compatível e ainda performático
+      cssCodeSplit: true, // Divide CSS por página
       rollupOptions: {
         output: {
           manualChunks: {
             react: ['react', 'react-dom'],
+            vendor: ['axios']
           },
         },
       },
     },
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'axios'],
+      esbuildOptions: {
+        target: 'es2017'
+      }
+    },
     preview: {
       allowedHosts: ['maquina-campanha-frontend.onrender.com'],
-      port: env.PORT || 4173, // Usa porta do ambiente, se existir
+      port: env.PORT || 4173,
     },
     define: {
-      'process.env': env, // Permite usar process.env no frontend
+      'process.env': env,
     },
   };
 });
